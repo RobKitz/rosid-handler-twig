@@ -173,6 +173,59 @@ describe('index()', function() {
 
 	})
 
+	it('should load Twig and transform it to HTML with via namespace included content', async function() {
+
+		const folderName1 = uuid()
+		const folderName2 = uuid()
+		const fileName1 = `${ uuid() }.twig`
+		const fileName2 = `${ uuid() }.twig`
+		const namespaceName1 = uuid()
+		const namespaceName2 = uuid()
+
+		const structure = await fsify([
+			{
+				type: fsify.DIRECTORY,
+				name: folderName1,
+				contents: [
+					{
+						type: fsify.FILE,
+						name: fileName1,
+						contents: 'value1'
+					}
+				]
+			},
+			{
+				type: fsify.DIRECTORY,
+				name: folderName2,
+				contents: [
+					{
+						type: fsify.FILE,
+						name: fileName2,
+						contents: 'value2'
+					}
+				]
+			},
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.twig`,
+				contents: 	`{% include '@${ namespaceName1 }/${ fileName1 }' %}` +
+							`{% include '@${ namespaceName2 }/${ fileName2 }' %}`
+			}
+		])
+
+		const namespacePath1 = path.relative(process.cwd(), structure[0].name)
+		const namespacePath2 = path.relative(process.cwd(), structure[1].name)
+		const namespace = {}
+		namespace[namespaceName1] = namespacePath1
+		namespace[namespaceName2] = namespacePath2
+
+		const file = path.relative(process.cwd(), structure[2].name)
+		const result = await index(file, { namespaces: namespace })
+
+		assert.strictEqual(result, structure[0].contents[0].contents + structure[1].contents[0].contents)
+
+	})
+
 	it('should load Twig and transform it to HTML with included content', async function() {
 
 		const fileName = `${ uuid() }.twig`

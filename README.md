@@ -57,6 +57,7 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 	- `prepend` `{?String}` - String that will be placed in front of the content of filePath. Defaults to `''`.
 	- `append` `{?String}` - String that will be placed at the end of the content of filePath. Defaults to `''`.
 	- `src` `{?String}` - Path base for injects with the inject tag. Defaults to the current working directory.
+	- `namespaces` `{?Object}` - Key set the name, value set the path. Defaults to `{}`.
 
 ## Returns
 

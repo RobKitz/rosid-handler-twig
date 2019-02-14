@@ -44,6 +44,7 @@ const render = function(filePath, data, opts, next) {
 		try {
 
 			const template = twig({
+				namespaces: opts.namespaces,
 				data: str,
 				path: filePath,
 				autoescape: true,
@@ -78,11 +79,13 @@ module.exports = async function(filePath, data, opts) {
 	const prepend = typeof opts.prepend === 'string' ? opts.prepend : ''
 	const append = typeof opts.append === 'string' ? opts.append : ''
 	const src = typeof opts.src === 'string' ? opts.src : process.cwd()
+	const namespaces = typeof opts.namespaces === 'object' ? opts.namespaces : {}
 
 	return util.promisify(render)(filePath, data, {
 		prepend,
 		append,
-		src
+		src,
+		namespaces
 	})
 
 }
